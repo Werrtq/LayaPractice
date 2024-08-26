@@ -1,0 +1,28 @@
+{
+  "resolution": {
+    "designWidth": 1920,
+    "designHeight": 1080,
+    "screenMode": "horizontal",
+    "backgroundColor": "rgba(140, 186, 217, 1)"
+  },
+  "3D": {
+    "lightClusterCount": {
+      "x": 12,
+      "y": 12,
+      "z": 12
+    }
+  },
+  "physics2D": {
+    "gravity": {
+      "y": 9.8
+    }
+  },
+  "modules": {
+    "_$type": true,
+    "laya.d3": true,
+    "laya.ui": true
+  },
+  "splash": {
+    "fit": "center"
+  }
+}
