@@ -11,6 +11,12 @@ export class playScript extends Laya.Script {
     toolInfo: any[];
     assemableList: Laya.List;
     assemableInfo: any[];
+    pipe: Laya.Image;
+
+    pipeSelected: boolean;
+    selectInfo: any = {};
+    checkIndex: number;
+    inputPort: number;
 
     //组件被激活后执行，此时所有节点和组件均已创建完毕，此方法只执行一次
     //onAwake(): void {}
@@ -34,9 +40,9 @@ export class playScript extends Laya.Script {
         pipeImage.skin = dataSource.pipeImage;
 
         let preFab = item.getChildByName('Prefab') as Laya.UIComponent;
-        console.log(preFab);
-        if (dataSource.type === '' || typeof dataSource.type == undefined) {
-            preFab.visible = true;
+        console.log(dataSource.type);
+        if (dataSource.type === '' || typeof dataSource.type === "undefined") {
+            preFab.visible = true;          //这里一开始是等于undefined,结果一直有bug，加上“”后就好了。
         } else {
             preFab.visible = false;
         }
@@ -51,13 +57,167 @@ export class playScript extends Laya.Script {
             { type: 'pipe05', pipeImage: 'atlas/img/pipe05.png', describe: '上右', port1: 2, port2: 3 },
             { type: 'pipe06', pipeImage: 'atlas/img/pipe06.png', describe: '上左', port1: 2, port2: 1 }
         ];
+        this.pipe = this.owner.getChildByName('pipe') as Laya.Image;
+        this.pipe.visible = false;
 
         this.assemableList = this.owner.getChildByName('assemableList') as Laya.List;
         this.assemableList.renderHandler = new Laya.Handler(this, this.renderAssemableList);
+        this.assemableList.mouseHandler = new Laya.Handler(this, this.mouseOnAssemableList);
 
         this.toolList = this.owner.getChildByName('toolList') as Laya.List;
         this.toolList.array = this.toolInfo;
         this.toolList.renderHandler = new Laya.Handler(this, this.renderToolList);
+        this.toolList.mouseHandler = new Laya.Handler(this, this.mouseOnToolList);
+    }
+
+    mouseOnToolList(e: Event, index: number) {
+        //console.log("mouseOnToolList:", index, "e,type", e.type);
+        if (e.type == 'mousedown') {
+            this.pipeSelected = true;
+            this.selectInfo = this.toolList.array[index];
+            this.pipe.skin = this.selectInfo.pipeImage;
+            this.pipe.pos(Laya.InputManager.mouseX, Laya.InputManager.mouseY, true);
+            this.pipe.visible = true;
+        }
+    }
+
+    mouseOnAssemableList(e: Event, index: number) {
+        //console.log("mouseOnToolList:", index, "e,type", e.type);
+        if (e.type == 'mouseup') {
+            if (index === 0 || index === 8) return;
+            this.assemableInfo[index].type = this.selectInfo.type;
+            this.assemableInfo[index].pipeImage = this.selectInfo.pipeImage;
+            this.assemableInfo[index].port1 = this.selectInfo.port1;
+            this.assemableInfo[index].port2 = this.selectInfo.port2;
+
+            this.assemableList.array = this.assemableInfo;
+            console.log(this.assemableList.array);
+            this.checkConnected();
+        }
+    }
+
+    /**核对连通性 */
+    checkConnected() {
+        this.checkIndex = 0;
+        this.inputPort = 3;
+        this.chcking(this.checkIndex, this.inputPort);
+    }
+
+    chcking(checkIndex: number, inputPort: number) {
+        let result = this.checkUnit(checkIndex, inputPort);
+        if (result.connected === true) {
+            console.log("【连通了】");
+        }
+        else {
+            //可以检测下一个单元
+            if (result.nextIndex !== -1) {
+                console.log("检测下一个单元");
+                this.chcking(result.nextIndex, result.nextInputPort);
+            }
+        }
+    }
+
+    /**检测单元 */
+    checkUnit(checkIndex: number, inputPort: number) {
+
+        let nextIndex = -1;
+        let nextInputPort = 0;
+        let connected = false;
+        let connectPort = 0;
+        switch (inputPort) {
+            case 1: connectPort = 3; break;
+            case 2: connectPort = 4; break;
+            case 3: connectPort = 1; break;
+            case 4: connectPort = 2; break;
+        }
+
+        //当前核查单元
+        let currentUnit = this.assemableInfo[checkIndex];
+        let port1 = currentUnit.port1;
+        let port2 = currentUnit.port2;
+
+        //当前单元为空
+        if (port1 === 0 && port2 === 0) {
+            //空操作
+        }
+        //到达末端单元
+        else if (checkIndex === 8) {
+            if (connectPort === port1 || connectPort === port2) {
+                connected = true;
+            }
+        }
+        //中间单元检测--确定下一连接点
+        else {
+            if (connectPort === port1) {
+                nextInputPort = port2;
+            }
+            // 不直接使用else，避免this.assembleData数据错误
+            if (connectPort === port2) {
+                nextInputPort = port1;
+            }
+
+            // 存在有效出口
+            if (connectPort !== nextInputPort) {
+                switch (nextInputPort) {
+                    //左
+                    case 1: {
+                        if (checkIndex === 0 || checkIndex === 3 || checkIndex === 6) {
+                            nextIndex = -1;
+                        }
+                        else {
+                            nextIndex = checkIndex - 1;
+                        }
+                    } break;
+                    //上
+                    case 2: {
+                        if (checkIndex === 0 || checkIndex === 1 || checkIndex === 2) {
+                            nextIndex = -1;
+                        }
+                        else {
+                            nextIndex = checkIndex - 3;
+                        }
+                    } break;
+                    //右
+                    case 3: {
+                        if (checkIndex === 2 || checkIndex === 5) {
+                            nextIndex = -1;
+                        }
+                        else {
+                            nextIndex = checkIndex + 1;
+                        }
+                    } break;
+                    //左
+                    case 4: {
+                        if (checkIndex === 6 || checkIndex === 7) {
+                            nextIndex = -1;
+                        }
+                        else {
+                            nextIndex = checkIndex + 3;
+                        }
+                    } break;
+                    default: {
+                        nextIndex = -1;
+                    } break;
+                }
+            }
+        }
+
+        console.log("当前单元,索引：", checkIndex, " 入口：",
+            inputPort, " connectPort: ", connectPort, " nextInputPort: ", nextInputPort);
+
+        return { nextIndex, nextInputPort, connected };
+    }
+
+    onMouseDrag(evt: Laya.Event): void {
+        this.pipe.pos(Laya.InputManager.mouseX, Laya.InputManager.mouseY, true);
+    }
+
+    onMouseDragEnd(evt: Laya.Event): void {
+        //console.log(this.assemableList.array);
+        this.selectInfo = {};
+        this.pipeSelected = false;
+        this.pipe.visible = false;
+        //console.log(this.assemableList.array);
     }
 
     initAssemableInfo() {
@@ -67,10 +227,10 @@ export class playScript extends Laya.Script {
             { index: 2, type: '', pipeImage: '', port1: 0, port2: 0 },
             { index: 3, type: '', pipeImage: '', port1: 0, port2: 0 },
             { index: 4, type: '', pipeImage: '', port1: 0, port2: 0 },
+            { index: 5, type: '', pipeImage: '', port1: 0, port2: 0 },
             { index: 6, type: '', pipeImage: '', port1: 0, port2: 0 },
             { index: 7, type: '', pipeImage: '', port1: 0, port2: 0 },
             { index: 8, type: '', pipeImage: '', port1: 0, port2: 0 },
-            { index: 9, type: '', pipeImage: '', port1: 0, port2: 0 },
         ];
 
         let random = Math.random();

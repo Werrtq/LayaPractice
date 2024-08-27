@@ -37,12 +37,12 @@
   "SelectResourceDialog": {
     "iconScale": 0,
     "previewPanelHeight": 202,
-    "x": 1273,
-    "y": 135,
+    "x": 954,
+    "y": 189,
     "width": 631,
-    "height": 657
+    "height": 590
   },
-  "playButtonBehavior": "startup",
+  "playButtonBehavior": "current",
   "playUsingHttps": false,
   "SelectNodeDialog": {
     "x": 1550,

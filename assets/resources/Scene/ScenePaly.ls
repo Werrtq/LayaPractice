@@ -191,11 +191,13 @@
       "_$id": "tqug7qj5",
       "_$type": "List",
       "name": "assemableList",
-      "x": 656,
-      "y": 162,
+      "x": 660,
+      "y": 160,
       "width": 600,
       "height": 600,
       "_mouseState": 2,
+      "centerX": 0,
+      "centerY": -80,
       "itemTemplate": {
         "_$ref": "3b361zlh",
         "_$tmpl": "itemRender"
@@ -256,6 +258,18 @@
       "align": "center",
       "valign": "top",
       "padding": "0,0,0,0"
+    },
+    {
+      "_$id": "he2pznfv",
+      "_$type": "Image",
+      "name": "pipe",
+      "width": 200,
+      "height": 200,
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "skin": "res://b0e41eae-bb77-4097-8988-56bba4967d52",
+      "useSourceSize": true,
+      "color": "#ffffff"
     }
   ]
 }

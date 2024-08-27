@@ -103,6 +103,10 @@
   // src/playScript.ts
   var { regClass: regClass4, property: property4 } = Laya;
   var playScript = class extends Laya.Script {
+    constructor() {
+      super(...arguments);
+      this.selectInfo = {};
+    }
     //组件被激活后执行，此时所有节点和组件均已创建完毕，此方法只执行一次
     //onAwake(): void {}
     //组件被启用后执行，例如节点被添加到舞台后
@@ -121,8 +125,8 @@
       let pipeImage = item.getChildByName("pipeImage");
       pipeImage.skin = dataSource.pipeImage;
       let preFab = item.getChildByName("Prefab");
-      console.log(preFab);
-      if (dataSource.type === "" || typeof dataSource.type == void 0) {
+      console.log(dataSource.type);
+      if (dataSource.type === "" || typeof dataSource.type === "undefined") {
         preFab.visible = true;
       } else {
         preFab.visible = false;
@@ -137,11 +141,155 @@
         { type: "pipe05", pipeImage: "atlas/img/pipe05.png", describe: "上右", port1: 2, port2: 3 },
         { type: "pipe06", pipeImage: "atlas/img/pipe06.png", describe: "上左", port1: 2, port2: 1 }
       ];
+      this.pipe = this.owner.getChildByName("pipe");
+      this.pipe.visible = false;
       this.assemableList = this.owner.getChildByName("assemableList");
       this.assemableList.renderHandler = new Laya.Handler(this, this.renderAssemableList);
+      this.assemableList.mouseHandler = new Laya.Handler(this, this.mouseOnAssemableList);
       this.toolList = this.owner.getChildByName("toolList");
       this.toolList.array = this.toolInfo;
       this.toolList.renderHandler = new Laya.Handler(this, this.renderToolList);
+      this.toolList.mouseHandler = new Laya.Handler(this, this.mouseOnToolList);
+    }
+    mouseOnToolList(e, index) {
+      if (e.type == "mousedown") {
+        this.pipeSelected = true;
+        this.selectInfo = this.toolList.array[index];
+        this.pipe.skin = this.selectInfo.pipeImage;
+        this.pipe.pos(Laya.InputManager.mouseX, Laya.InputManager.mouseY, true);
+        this.pipe.visible = true;
+      }
+    }
+    mouseOnAssemableList(e, index) {
+      if (e.type == "mouseup") {
+        if (index === 0 || index === 8)
+          return;
+        this.assemableInfo[index].type = this.selectInfo.type;
+        this.assemableInfo[index].pipeImage = this.selectInfo.pipeImage;
+        this.assemableInfo[index].port1 = this.selectInfo.port1;
+        this.assemableInfo[index].port2 = this.selectInfo.port2;
+        this.assemableList.array = this.assemableInfo;
+        console.log(this.assemableList.array);
+        this.checkConnected();
+      }
+    }
+    /**核对连通性 */
+    checkConnected() {
+      this.checkIndex = 0;
+      this.inputPort = 3;
+      this.chcking(this.checkIndex, this.inputPort);
+    }
+    chcking(checkIndex, inputPort) {
+      let result = this.checkUnit(checkIndex, inputPort);
+      if (result.connected === true) {
+        console.log("【连通了】");
+      } else {
+        if (result.nextIndex !== -1) {
+          console.log("检测下一个单元");
+          this.chcking(result.nextIndex, result.nextInputPort);
+        }
+      }
+    }
+    /**检测单元 */
+    checkUnit(checkIndex, inputPort) {
+      let nextIndex = -1;
+      let nextInputPort = 0;
+      let connected = false;
+      let connectPort = 0;
+      switch (inputPort) {
+        case 1:
+          connectPort = 3;
+          break;
+        case 2:
+          connectPort = 4;
+          break;
+        case 3:
+          connectPort = 1;
+          break;
+        case 4:
+          connectPort = 2;
+          break;
+      }
+      let currentUnit = this.assemableInfo[checkIndex];
+      let port1 = currentUnit.port1;
+      let port2 = currentUnit.port2;
+      if (port1 === 0 && port2 === 0) {
+      } else if (checkIndex === 8) {
+        if (connectPort === port1 || connectPort === port2) {
+          connected = true;
+        }
+      } else {
+        if (connectPort === port1) {
+          nextInputPort = port2;
+        }
+        if (connectPort === port2) {
+          nextInputPort = port1;
+        }
+        if (connectPort !== nextInputPort) {
+          switch (nextInputPort) {
+            case 1:
+              {
+                if (checkIndex === 0 || checkIndex === 3 || checkIndex === 6) {
+                  nextIndex = -1;
+                } else {
+                  nextIndex = checkIndex - 1;
+                }
+              }
+              break;
+            case 2:
+              {
+                if (checkIndex === 0 || checkIndex === 1 || checkIndex === 2) {
+                  nextIndex = -1;
+                } else {
+                  nextIndex = checkIndex - 3;
+                }
+              }
+              break;
+            case 3:
+              {
+                if (checkIndex === 2 || checkIndex === 5) {
+                  nextIndex = -1;
+                } else {
+                  nextIndex = checkIndex + 1;
+                }
+              }
+              break;
+            case 4:
+              {
+                if (checkIndex === 6 || checkIndex === 7) {
+                  nextIndex = -1;
+                } else {
+                  nextIndex = checkIndex + 3;
+                }
+              }
+              break;
+            default:
+              {
+                nextIndex = -1;
+              }
+              break;
+          }
+        }
+      }
+      console.log(
+        "当前单元,索引：",
+        checkIndex,
+        " 入口：",
+        inputPort,
+        " connectPort: ",
+        connectPort,
+        " nextInputPort: ",
+        nextInputPort
+      );
+      return { nextIndex, nextInputPort, connected };
+    }
+    onMouseDrag(evt) {
+      this.pipe.pos(Laya.InputManager.mouseX, Laya.InputManager.mouseY, true);
+    }
+    onMouseDragEnd(evt) {
+      this.selectInfo = {};
+      this.pipeSelected = false;
+      this.pipe.visible = false;
     }
     initAssemableInfo() {
       this.assemableInfo = [
@@ -150,10 +298,10 @@
         { index: 2, type: "", pipeImage: "", port1: 0, port2: 0 },
         { index: 3, type: "", pipeImage: "", port1: 0, port2: 0 },
         { index: 4, type: "", pipeImage: "", port1: 0, port2: 0 },
+        { index: 5, type: "", pipeImage: "", port1: 0, port2: 0 },
         { index: 6, type: "", pipeImage: "", port1: 0, port2: 0 },
         { index: 7, type: "", pipeImage: "", port1: 0, port2: 0 },
-        { index: 8, type: "", pipeImage: "", port1: 0, port2: 0 },
-        { index: 9, type: "", pipeImage: "", port1: 0, port2: 0 }
+        { index: 8, type: "", pipeImage: "", port1: 0, port2: 0 }
       ];
       let random = Math.random();
       if (random > 0.5) {
