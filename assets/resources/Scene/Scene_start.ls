@@ -42,9 +42,24 @@
       "skin": "res://cb127771-906e-4e43-9913-6d8b02864cde",
       "sizeGrid": "30,30,30,30,0",
       "label": "开始游戏",
-      "labelSize": 50,
+      "labelSize": 40,
       "labelAlign": "center",
-      "labelVAlign": "middle"
+      "labelVAlign": "middle",
+      "_$child": [
+        {
+          "_$id": "ewccxy75",
+          "_$type": "Image",
+          "name": "Image",
+          "x": 30,
+          "y": 40,
+          "width": 64,
+          "height": 64,
+          "centerY": 0,
+          "skin": "res://7eac5a53-4c72-46a7-8a32-f2d161193ac5",
+          "useSourceSize": true,
+          "color": "#ffffff"
+        }
+      ]
     },
     {
       "_$id": "9620ngga",

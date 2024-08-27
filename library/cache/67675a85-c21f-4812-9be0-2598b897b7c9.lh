@@ -1,0 +1,32 @@
+{
+  "_$ver": 1,
+  "_$id": "klc70k20",
+  "_$type": "Box",
+  "name": "Box",
+  "width": 400,
+  "height": 400,
+  "_$comp": [
+    {
+      "_$type": "Animator2D",
+      "controller": {
+        "_$uuid": "962b46a0-a8e7-4bd5-8b4f-eae1ebb396d7",
+        "_$type": "AnimationController2D"
+      },
+      "controllerLayers": []
+    }
+  ],
+  "_$child": [
+    {
+      "_$id": "i44bo88l",
+      "_$type": "Image",
+      "name": "Image",
+      "x": 156,
+      "y": 156,
+      "width": 200,
+      "height": 200,
+      "skin": "res://d490d168-4823-4c0d-be1d-2f30389004ab",
+      "useSourceSize": true,
+      "color": "#ffffff"
+    }
+  ]
+}

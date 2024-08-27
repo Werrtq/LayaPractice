@@ -17,7 +17,7 @@ export class SceneStartScript extends Laya.Script {
         this.btnButton = this.owner.getChildByName('btnButton') as Laya.Button;
         this.btnButton.on(Laya.Event.CLICK, () => {
             // console.log('Hello world', Laya.stage);
-            Laya.Scene.open('./resources/Scene/Dialog_start.ls', false);
+            Laya.Scene.open('./resources/Scene/ScenePaly.ls', true);
         })
     }
 

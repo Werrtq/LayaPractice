@@ -2,7 +2,7 @@
   "default": {
     "width": 1916,
     "height": 935,
-    "id": "X0NZn66m",
+    "id": "Jyf4-b1f",
     "layout": 1,
     "children": [
       {
@@ -70,7 +70,7 @@
             "width": 1316,
             "height": 288,
             "id": "cTIBtkMA",
-            "selected": 0,
+            "selected": 1,
             "children": [
               "ConsolePanel",
               "TimelinePanel"
@@ -100,7 +100,7 @@
       {
         "width": 624,
         "height": 500,
-        "id": "A4INmQFz",
+        "id": "seKP94FS",
         "selected": 0,
         "children": [
           "BuildSettingsPanel"

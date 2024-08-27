@@ -7,6 +7,12 @@
   "top": 0,
   "bottom": 0,
   "name": "Scene2D",
+  "_$comp": [
+    {
+      "_$type": "562f163d-d084-4f17-8752-d1f917ea6f89",
+      "scriptPath": "../src/DialogStartScript.ts"
+    }
+  ],
   "_$child": [
     {
       "_$id": "dhfjk150",
@@ -29,12 +35,6 @@
       "centerX": 0,
       "centerY": 0,
       "isModal": true,
-      "_$comp": [
-        {
-          "_$type": "562f163d-d084-4f17-8752-d1f917ea6f89",
-          "scriptPath": "../src/DialogStartScript.ts"
-        }
-      ],
       "_$child": [
         {
           "_$id": "82913h95",
@@ -99,14 +99,7 @@
           "label": "开始",
           "labelSize": 52,
           "labelAlign": "center",
-          "labelVAlign": "middle",
-          "_$comp": [
-            {
-              "_$type": "98e22991-2739-44ed-8f21-16a86d0c6eb7",
-              "scriptPath": "../src/NewScript.ts",
-              "text": ""
-            }
-          ]
+          "labelVAlign": "middle"
         }
       ]
     }

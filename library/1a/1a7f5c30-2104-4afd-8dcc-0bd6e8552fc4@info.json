@@ -5,7 +5,9 @@
   },
   "HierarchyPanel": {
     "expandedNodes": {
-      "0": null
+      "0": {
+        "1": null
+      }
     }
   }
 }

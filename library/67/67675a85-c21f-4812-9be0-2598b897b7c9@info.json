@@ -1,13 +1,11 @@
 {
   "ScenePanel": {
-    "viewScale": 0.3789165859744805,
+    "viewScale": 1,
     "mode": 1
   },
   "HierarchyPanel": {
     "expandedNodes": {
-      "0": {
-        "1": null
-      }
+      "0": null
     }
   }
 }
