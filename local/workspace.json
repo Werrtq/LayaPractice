@@ -17,6 +17,7 @@
     "expandedNodes": [
       "",
       "atlas",
+      "atlas/img",
       "resources",
       "resources/preFab",
       "resources/Scene",
@@ -37,7 +38,7 @@
     "iconScale": 0,
     "previewPanelHeight": 202,
     "x": 954,
-    "y": 189,
+    "y": 215,
     "width": 631,
     "height": 590
   },
@@ -45,7 +46,7 @@
   "playUsingHttps": false,
   "SelectNodeDialog": {
     "x": 1550,
-    "y": 582,
+    "y": 234,
     "width": 354,
     "height": 459
   }

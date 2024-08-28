@@ -118,8 +118,6 @@
       let background = this.owner.getChildByName("background");
       background.width = Laya.stage.width;
       background.height = Laya.stage.height;
-      this.owner.width = Laya.stage.width;
-      this.owner.height = Laya.stage.height;
       let btnClose = this.owner.getChildByName("btnClose");
       btnClose.on(Laya.Event.CLICK, () => {
         Laya.stage.event(Laya.Event.MESSAGE, { type: "success" });
@@ -193,8 +191,63 @@
     regClass5("cd2947ea-92aa-4cd4-8309-d811c236a55e", "../src/SceneStartScript.ts")
   ], SceneStartScript);
 
-  // src/stopWatchScript.ts
+  // src/ballScript.ts
   var { regClass: regClass6, property: property6 } = Laya;
+  var ballScript = class extends Laya.Script {
+    constructor() {
+      super(...arguments);
+      this.speed = 1e3;
+      this.auto = false;
+    }
+    //组件被激活后执行，此时所有节点和组件均已创建完毕，此方法只执行一次
+    //onAwake(): void {}
+    //组件被启用后执行，例如节点被添加到舞台后
+    onEnable() {
+      this.owner.pos(this.x, this.y);
+      Laya.Tween.to(this.owner, {
+        x: this.x2,
+        y: this.y2
+      }, 1e3, Laya.Ease.linearNone, Laya.Handler.create(this, () => {
+        this.owner.pos(this.x3, this.y3);
+        this.auto = true;
+      }), this.delay);
+    }
+    initball(x, y, x2, y2, x3, y3, delay = 0) {
+      this.x = x;
+      this.y = y;
+      this.x2 = x2;
+      this.y2 = y2;
+      this.x3 = x3;
+      this.y3 = y3;
+      this.delay = delay;
+    }
+    //组件被禁用时执行，例如从节点从舞台移除后
+    //onDisable(): void {}
+    //第一次执行update之前执行，只会执行一次
+    //onStart(): void {}
+    //手动调用节点销毁时执行
+    //onDestroy(): void {}
+    //每帧更新时执行，尽量不要在这里写大循环逻辑或者使用getComponent方法
+    onUpdate() {
+      if (!this.auto)
+        return;
+      this.owner.x += this.speed * Laya.timer.delta / 1e3;
+      if (this.owner.x > 3e3) {
+        this.owner.destroy(true);
+      }
+    }
+    //每帧更新时执行，在update之后执行，尽量不要在这里写大循环逻辑或者使用getComponent方法
+    //onLateUpdate(): void {}
+    //鼠标点击后执行。与交互相关的还有onMouseDown等十多个函数，具体请参阅文档。
+    //onMouseClick(): void {}
+  };
+  __name(ballScript, "ballScript");
+  ballScript = __decorateClass([
+    regClass6("23d23240-1d41-48ad-9497-fde3cc6a29dd", "../src/ballScript.ts")
+  ], ballScript);
+
+  // src/stopWatchScript.ts
+  var { regClass: regClass7, property: property7 } = Laya;
   var GREEN = 1;
   var YELLOW = 2;
   var RED = 3;
@@ -273,17 +326,17 @@
   };
   __name(stopWatchScript, "stopWatchScript");
   __decorateClass([
-    property6(String)
+    property7(String)
   ], stopWatchScript.prototype, "text", 2);
   stopWatchScript = __decorateClass([
-    regClass6("ad071f3a-f84b-4513-9cc1-7e0a2c55370e", "../src/stopWatchScript.ts")
+    regClass7("ad071f3a-f84b-4513-9cc1-7e0a2c55370e", "../src/stopWatchScript.ts")
   ], stopWatchScript);
 
   // src/playScript.ts
-  var { regClass: regClass7, property: property7 } = Laya;
+  var { regClass: regClass8, property: property8 } = Laya;
   var playScript = class extends Laya.Script {
     constructor() {
-      super(...arguments);
+      super();
       this.selectInfo = {};
     }
     //组件被激活后执行，此时所有节点和组件均已创建完毕，此方法只执行一次
@@ -293,6 +346,10 @@
       this.intercom();
       this.initUI();
       this.initLevel();
+      const path = "./resources/preFab/ballPrefab.lh";
+      Laya.loader.load(path).then((res) => {
+        this.ballPrefab = res;
+      });
     }
     renderToolList(item, index) {
       let dataSource = item.dataSource;
@@ -356,6 +413,10 @@
       this.toolList.array = this.toolInfo;
       this.toolList.renderHandler = new Laya.Handler(this, this.renderToolList);
       this.toolList.mouseHandler = new Laya.Handler(this, this.mouseOnToolList);
+      this.ballContainer = this.owner.getChildByName("ballContainer");
+      this.ballContainer.width = this.owner.width;
+      this.ballContainer.height = this.owner.height;
+      this.assamableContainer = this.owner.getChildByName("assemableContainer");
     }
     initLevel() {
       this.initAssemableInfo();
@@ -393,14 +454,30 @@
       let result = this.checkUnit(checkIndex, inputPort);
       if (result.connected === true) {
         console.log("【连通了】");
-        this.stopswitchSp.stopRound(true);
-        Laya.Scene.open("./resources/preFab/Dialog_success.lh", false);
+        this.success();
       } else {
         if (result.nextIndex !== -1) {
           console.log("检测下一个单元");
           this.chcking(result.nextIndex, result.nextInputPort);
         }
       }
+    }
+    success() {
+      this.stopswitchSp.stopRound(true);
+      Laya.Scene.open("./resources/preFab/Dialog_success.lh", false);
+      for (let i = 0; i < 5; i++) {
+        this.addball(i * 200);
+      }
+    }
+    addball(delay = 0) {
+      let x2 = this.assamableContainer.x;
+      let y2 = this.assamableContainer.y + 115;
+      let x3 = this.assamableContainer.x + this.assamableContainer.width;
+      let y3 = this.assamableContainer.y + 515;
+      let ball = Laya.Pool.getItemByCreateFun("ball", this.ballPrefab.create, this.ballPrefab);
+      let ballSp = ball.getComponent(ballScript);
+      ballSp.initball(-100, y2, x2, y2, x3, y3, delay);
+      this.ballContainer.addChild(ball);
     }
     /**检测单元 */
     checkUnit(checkIndex, inputPort) {
@@ -554,8 +631,11 @@
     //onMouseClick(): void {}
   };
   __name(playScript, "playScript");
+  __decorateClass([
+    property8({ type: Laya.Box })
+  ], playScript.prototype, "ball", 2);
   playScript = __decorateClass([
-    regClass7("77efc593-71cd-4ec4-814b-3d6ddc4f69bc", "../src/playScript.ts")
+    regClass8("77efc593-71cd-4ec4-814b-3d6ddc4f69bc", "../src/playScript.ts")
   ], playScript);
 })();
 //# sourceMappingURL=bundle.scene.js.map

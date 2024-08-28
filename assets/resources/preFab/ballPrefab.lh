@@ -1,0 +1,29 @@
+{
+  "_$ver": 1,
+  "_$id": "fx9g4qvx",
+  "_$type": "Box",
+  "name": "Box",
+  "width": 40,
+  "height": 40,
+  "_$comp": [
+    {
+      "_$type": "23d23240-1d41-48ad-9497-fde3cc6a29dd",
+      "scriptPath": "../src/ballScript.ts",
+      "text": ""
+    }
+  ],
+  "_$child": [
+    {
+      "_$id": "i883rr89",
+      "_$type": "Image",
+      "name": "Image",
+      "x": -40,
+      "y": -40,
+      "width": 80,
+      "height": 80,
+      "skin": "res://250d7184-ae5e-43c4-be08-87ca9037b81d",
+      "useSourceSize": true,
+      "color": "#ffffff"
+    }
+  ]
+}

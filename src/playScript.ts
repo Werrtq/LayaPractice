@@ -1,4 +1,5 @@
 const { regClass, property } = Laya;
+import { ballScript } from "./ballScript";
 import GameManager from "./GameManager";
 import { stopWatchScript } from "./stopWatchScript";
 
@@ -9,6 +10,7 @@ export class playScript extends Laya.Script {
 
     // @property(String)
     // public text: string = "";
+
     toolList: Laya.List;
     toolInfo: any[];
     assemableList: Laya.List;
@@ -21,6 +23,14 @@ export class playScript extends Laya.Script {
     inputPort: number;
     stopswitchSp: stopWatchScript;
 
+    @property({ type: Laya.Box })
+    public ball: Laya.Prefab;
+    ballContainer: Laya.Sprite;
+    ballPrefab: Laya.Prefab;
+    assamableContainer: Laya.Image;
+    constructor() {
+        super();
+    }
     //组件被激活后执行，此时所有节点和组件均已创建完毕，此方法只执行一次
     //onAwake(): void {}
 
@@ -29,6 +39,11 @@ export class playScript extends Laya.Script {
         this.intercom();
         this.initUI();
         this.initLevel();
+
+        const path: string = './resources/preFab/ballPrefab.lh';
+        Laya.loader.load(path).then((res) => {
+            this.ballPrefab = res;
+        });
     }
 
     renderToolList(item: Laya.Box, index: number) {
@@ -100,6 +115,12 @@ export class playScript extends Laya.Script {
         this.toolList.array = this.toolInfo;
         this.toolList.renderHandler = new Laya.Handler(this, this.renderToolList);
         this.toolList.mouseHandler = new Laya.Handler(this, this.mouseOnToolList);
+
+        this.ballContainer = this.owner.getChildByName('ballContainer') as Laya.Sprite;
+        this.ballContainer.width = this.owner.width;
+        this.ballContainer.height = this.owner.height;
+
+        this.assamableContainer = this.owner.getChildByName('assemableContainer') as Laya.Image;
     }
 
     initLevel() {
@@ -145,8 +166,7 @@ export class playScript extends Laya.Script {
         let result = this.checkUnit(checkIndex, inputPort);
         if (result.connected === true) {
             console.log("【连通了】");
-            this.stopswitchSp.stopRound(true);
-            Laya.Scene.open('./resources/preFab/Dialog_success.lh', false);
+            this.success();
         }
         else {
             //可以检测下一个单元
@@ -155,6 +175,25 @@ export class playScript extends Laya.Script {
                 this.chcking(result.nextIndex, result.nextInputPort);
             }
         }
+    }
+
+    success() {
+        this.stopswitchSp.stopRound(true);
+        Laya.Scene.open('./resources/preFab/Dialog_success.lh', false);
+        for (let i = 0; i < 5; i++) {
+            this.addball(i * 200);
+        }
+    }
+
+    addball(delay: number = 0) {
+        let x2 = this.assamableContainer.x;
+        let y2 = this.assamableContainer.y + 115;
+        let x3 = this.assamableContainer.x + this.assamableContainer.width;
+        let y3 = this.assamableContainer.y + 515;
+        let ball = Laya.Pool.getItemByCreateFun("ball", this.ballPrefab.create, this.ballPrefab) as Laya.Sprite;
+        let ballSp = ball.getComponent(ballScript);
+        ballSp.initball(-100, y2, x2, y2, x3, y3, delay);
+        this.ballContainer.addChild(ball);
     }
 
     /**检测单元 */

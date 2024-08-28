@@ -19,9 +19,6 @@ export class DialogSuccessScript extends Laya.Script {
         background.width = Laya.stage.width;
         background.height = Laya.stage.height;
 
-        this.owner.width = Laya.stage.width;
-        this.owner.height = Laya.stage.height;
-
         let btnClose = this.owner.getChildByName('btnClose') as Laya.Button;
         btnClose.on(Laya.Event.CLICK, () => {
             Laya.stage.event(Laya.Event.MESSAGE, { type: "success" });

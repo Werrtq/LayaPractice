@@ -10,10 +10,18 @@
   "_$comp": [
     {
       "_$type": "77efc593-71cd-4ec4-814b-3d6ddc4f69bc",
-      "scriptPath": "../src/playScript.ts"
+      "scriptPath": "../src/playScript.ts",
+      "ball": null
     }
   ],
   "_$child": [
+    {
+      "_$id": "8o2ao48p",
+      "_$type": "Sprite",
+      "name": "ballContainer",
+      "width": 1920,
+      "height": 1080
+    },
     {
       "_$id": "9hcizcdy",
       "_$type": "Image",
