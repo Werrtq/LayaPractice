@@ -17,7 +17,6 @@
     "expandedNodes": [
       "",
       "atlas",
-      "atlas/img",
       "resources",
       "resources/preFab",
       "resources/Scene",
@@ -26,7 +25,7 @@
     "twoColumn": false,
     "firstColumnWidth": 289,
     "iconScale": 0,
-    "selected": ":f2"
+    "selected": "59ac587c-3f3d-46cf-83b5-b0b5f1f5d725"
   },
   "ConsolePanel": {
     "collapse": true
@@ -46,7 +45,7 @@
   "playUsingHttps": false,
   "SelectNodeDialog": {
     "x": 1550,
-    "y": 234,
+    "y": 582,
     "width": 354,
     "height": 459
   }

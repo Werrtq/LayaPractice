@@ -1,9 +1,7 @@
-import GameManager from "./GameManager";
-
 const { regClass, property } = Laya;
 
 @regClass()
-export class DialogStartScript extends Laya.Script {
+export class DialogFailScript extends Laya.Script {
     btnStart: Laya.Button;
     //declare owner : Laya.Sprite3D;
     declare owner: Laya.Sprite;
@@ -26,12 +24,9 @@ export class DialogStartScript extends Laya.Script {
         dialog.width = Laya.stage.width;
         dialog.height = Laya.stage.height;
 
-        let levelLabel = dialog.getChildByName('levelLabel') as Laya.Label;
-        levelLabel.text = "关卡" + GameManager.getInstance().level;
-
-        let btnStart = dialog.getChildByName('btnStart') as Laya.Button;
-        btnStart.on(Laya.Event.CLICK, () => {
-            Laya.stage.event(Laya.Event.MESSAGE, { type: "gameStart" });
+        let btnClose = dialog.getChildByName('btnClose') as Laya.Button;
+        btnClose.on(Laya.Event.CLICK, () => {
+            Laya.stage.event(Laya.Event.MESSAGE, { type: "tryAgain" });
             this.owner.destroy(true);       //       他的owner应该是dialog啊？如果其销毁了，那应该还有box啊？实际上它也没有了。
         });
     }

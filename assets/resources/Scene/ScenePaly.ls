@@ -263,13 +263,26 @@
       "_$id": "he2pznfv",
       "_$type": "Image",
       "name": "pipe",
+      "x": 25,
+      "y": 36,
       "width": 200,
       "height": 200,
       "anchorX": 0.5,
       "anchorY": 0.5,
+      "visible": false,
       "skin": "res://b0e41eae-bb77-4097-8988-56bba4967d52",
-      "useSourceSize": true,
       "color": "#ffffff"
+    },
+    {
+      "_$id": "x1hyr2kv",
+      "_$prefab": "21b0cb7d-d27c-4a41-9469-955b6b72c219",
+      "name": "stopwatchPrefab",
+      "active": true,
+      "x": 1500,
+      "y": 20,
+      "visible": true,
+      "right": 20,
+      "top": 20
     }
   ]
 }

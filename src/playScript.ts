@@ -1,4 +1,6 @@
 const { regClass, property } = Laya;
+import GameManager from "./GameManager";
+import { stopWatchScript } from "./stopWatchScript";
 
 @regClass()
 export class playScript extends Laya.Script {
@@ -17,15 +19,16 @@ export class playScript extends Laya.Script {
     selectInfo: any = {};
     checkIndex: number;
     inputPort: number;
+    stopswitchSp: stopWatchScript;
 
     //组件被激活后执行，此时所有节点和组件均已创建完毕，此方法只执行一次
     //onAwake(): void {}
 
     //组件被启用后执行，例如节点被添加到舞台后
     onEnable(): void {
+        this.intercom();
         this.initUI();
-        this.initAssemableInfo();
-        this.assemableList.array = this.assemableInfo;
+        this.initLevel();
     }
 
     renderToolList(item: Laya.Box, index: number) {
@@ -40,12 +43,38 @@ export class playScript extends Laya.Script {
         pipeImage.skin = dataSource.pipeImage;
 
         let preFab = item.getChildByName('Prefab') as Laya.UIComponent;
-        console.log(dataSource.type);
         if (dataSource.type === '' || typeof dataSource.type === "undefined") {
             preFab.visible = true;          //这里一开始是等于undefined,结果一直有bug，加上“”后就好了。
         } else {
             preFab.visible = false;
         }
+    }
+
+    intercom() {
+        Laya.stage.on(Laya.Event.MESSAGE, this, (data: any) => {
+            switch (data.type) {
+                case "missionFail":
+                    console.log("倒计时超时");
+                    Laya.Scene.open('./resources/Scene/Dialog_fail.ls', false);
+                    break;
+                case "gameStart":
+                    this.stopswitchSp.coolDown();
+                    break;
+                case "tryAgain":
+                    Laya.timer.once(1000, this, () => {
+                        this.stopswitchSp.reset(20000);
+                        this.initLevel();
+                    });
+                    break;
+                case "success":
+                    Laya.timer.once(1000, this, () => {
+                        GameManager.getInstance().level++;
+                        this.stopswitchSp.reset(20000);
+                        this.initLevel();
+                    });
+                    break;
+            }
+        });
     }
 
     initUI() {
@@ -57,6 +86,9 @@ export class playScript extends Laya.Script {
             { type: 'pipe05', pipeImage: 'atlas/img/pipe05.png', describe: '上右', port1: 2, port2: 3 },
             { type: 'pipe06', pipeImage: 'atlas/img/pipe06.png', describe: '上左', port1: 2, port2: 1 }
         ];
+        let stopswitch = this.owner.getChildByName("stopwatchPrefab");
+        this.stopswitchSp = stopswitch.getComponent(stopWatchScript);
+
         this.pipe = this.owner.getChildByName('pipe') as Laya.Image;
         this.pipe.visible = false;
 
@@ -68,6 +100,13 @@ export class playScript extends Laya.Script {
         this.toolList.array = this.toolInfo;
         this.toolList.renderHandler = new Laya.Handler(this, this.renderToolList);
         this.toolList.mouseHandler = new Laya.Handler(this, this.mouseOnToolList);
+    }
+
+    initLevel() {
+        this.initAssemableInfo();
+        this.assemableList.array = this.assemableInfo;
+
+        Laya.Scene.open('./resources/Scene/Dialog_start.ls', false);
     }
 
     mouseOnToolList(e: Event, index: number) {
@@ -91,7 +130,6 @@ export class playScript extends Laya.Script {
             this.assemableInfo[index].port2 = this.selectInfo.port2;
 
             this.assemableList.array = this.assemableInfo;
-            console.log(this.assemableList.array);
             this.checkConnected();
         }
     }
@@ -107,6 +145,8 @@ export class playScript extends Laya.Script {
         let result = this.checkUnit(checkIndex, inputPort);
         if (result.connected === true) {
             console.log("【连通了】");
+            this.stopswitchSp.stopRound(true);
+            Laya.Scene.open('./resources/preFab/Dialog_success.lh', false);
         }
         else {
             //可以检测下一个单元

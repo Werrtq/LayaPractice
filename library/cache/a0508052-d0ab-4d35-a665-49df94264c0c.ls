@@ -9,8 +9,8 @@
   "name": "Scene2D",
   "_$comp": [
     {
-      "_$type": "562f163d-d084-4f17-8752-d1f917ea6f89",
-      "scriptPath": "../src/DialogStartScript.ts"
+      "_$type": "350f24e1-fd18-4c69-9d1e-1ca3e3d98483",
+      "scriptPath": "../src/DialogFailScript.ts"
     }
   ],
   "_$child": [
@@ -60,26 +60,11 @@
           "height": 50,
           "centerX": 0,
           "centerY": -100,
-          "text": "开始管道连接",
+          "text": "管道连接失败",
           "fontSize": 55,
-          "color": "rgba(0, 108, 250, 1)",
-          "align": "center",
-          "valign": "top",
-          "padding": "0,0,0,0"
-        },
-        {
-          "_$id": "54n6ujno",
-          "_$type": "Label",
-          "name": "levelLabel",
-          "x": 710,
-          "y": 335,
-          "width": 500,
-          "height": 50,
-          "centerX": 0,
-          "centerY": -180,
-          "text": "关卡1",
-          "fontSize": 70,
-          "color": "rgba(0, 108, 250, 1)",
+          "color": "rgba(172, 7, 26, 1)",
+          "italic": true,
+          "underline": true,
           "align": "center",
           "valign": "top",
           "padding": "0,0,0,0"
@@ -87,7 +72,7 @@
         {
           "_$id": "yxn75eel",
           "_$type": "Button",
-          "name": "btnStart",
+          "name": "btnClose",
           "x": 864,
           "y": 470,
           "width": 192,
@@ -96,7 +81,7 @@
           "centerX": 0,
           "centerY": -20,
           "skin": "res://8426ca52-3079-43fb-8d82-ba0215847777",
-          "label": "开始",
+          "label": "关闭",
           "labelSize": 52,
           "labelAlign": "center",
           "labelVAlign": "middle"

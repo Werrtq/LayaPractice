@@ -1,0 +1,76 @@
+{
+  "_$ver": 1,
+  "_$id": "u2hnl2s5",
+  "_$type": "Dialog",
+  "name": "Dialog",
+  "width": 1920,
+  "height": 1080,
+  "_mouseState": 2,
+  "_$comp": [
+    {
+      "_$type": "fef5da7b-2156-4dcb-8d4f-7fb3ba5f22a1",
+      "scriptPath": "../src/DialogSuccessScript.ts"
+    }
+  ],
+  "_$child": [
+    {
+      "_$id": "j5lxkjk9",
+      "_$type": "Box",
+      "name": "background",
+      "width": 1920,
+      "height": 1080,
+      "alpha": 0.25,
+      "centerX": 0,
+      "centerY": 0,
+      "bgColor": "rgba(36, 133, 180, 1)"
+    },
+    {
+      "_$id": "183zm5rg",
+      "_$type": "Image",
+      "name": "Image",
+      "x": 710,
+      "y": 290,
+      "width": 500,
+      "height": 300,
+      "centerX": 0,
+      "centerY": -100,
+      "skin": "res://cb127771-906e-4e43-9913-6d8b02864cde",
+      "sizeGrid": "30,30,30,30,0",
+      "color": "#ffffff"
+    },
+    {
+      "_$id": "80eyc43q",
+      "_$type": "Label",
+      "name": "Label",
+      "x": 710,
+      "y": 415,
+      "width": 500,
+      "height": 50,
+      "centerX": 0,
+      "centerY": -100,
+      "text": "管道连接成功",
+      "fontSize": 55,
+      "color": "rgba(0, 108, 250, 1)",
+      "align": "center",
+      "valign": "top",
+      "padding": "0,0,0,0"
+    },
+    {
+      "_$id": "99pb3w79",
+      "_$type": "Button",
+      "name": "btnClose",
+      "x": 864,
+      "y": 470,
+      "width": 192,
+      "height": 100,
+      "_mouseState": 2,
+      "centerX": 0,
+      "centerY": -20,
+      "skin": "res://8426ca52-3079-43fb-8d82-ba0215847777",
+      "label": "确定",
+      "labelSize": 52,
+      "labelAlign": "center",
+      "labelVAlign": "middle"
+    }
+  ]
+}

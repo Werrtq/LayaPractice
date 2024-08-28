@@ -2,7 +2,7 @@
   "default": {
     "width": 1916,
     "height": 935,
-    "id": "wkiU3Jja",
+    "id": "SBvyWi9V",
     "layout": 1,
     "children": [
       {
@@ -100,7 +100,7 @@
       {
         "width": 624,
         "height": 500,
-        "id": "UJP3Z6EZ",
+        "id": "lRu7348t",
         "selected": 0,
         "children": [
           "BuildSettingsPanel"

@@ -70,7 +70,7 @@
         {
           "_$id": "54n6ujno",
           "_$type": "Label",
-          "name": "Label(1)",
+          "name": "levelLabel",
           "x": 710,
           "y": 335,
           "width": 500,

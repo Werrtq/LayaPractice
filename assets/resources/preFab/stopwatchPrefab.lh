@@ -1,0 +1,89 @@
+{
+  "_$ver": 1,
+  "_$id": "d6bgqtsa",
+  "_$type": "Box",
+  "name": "Box",
+  "width": 400,
+  "height": 400,
+  "_$comp": [
+    {
+      "_$type": "ad071f3a-f84b-4513-9cc1-7e0a2c55370e",
+      "scriptPath": "../src/stopWatchScript.ts",
+      "text": ""
+    }
+  ],
+  "_$child": [
+    {
+      "_$id": "agzdxfi8",
+      "_$type": "Sprite",
+      "name": "baseSp",
+      "width": 400,
+      "height": 400,
+      "_gcmds": [
+        {
+          "_$type": "DrawCircleCmd",
+          "x": 200,
+          "y": 200,
+          "radius": 185,
+          "lineWidth": 10,
+          "lineColor": "rgba(255, 255, 255, 1)"
+        }
+      ],
+      "mask": {
+        "_$ref": "m07loc3u"
+      },
+      "_$child": [
+        {
+          "_$id": "db0lwilp",
+          "_$type": "Sprite",
+          "name": "insideSp",
+          "width": 400,
+          "height": 400,
+          "_gcmds": [
+            {
+              "_$type": "DrawCircleCmd",
+              "x": 200,
+              "y": 200,
+              "radius": 175,
+              "lineWidth": 40,
+              "lineColor": "rgba(12, 145, 92, 1)"
+            }
+          ]
+        },
+        {
+          "_$id": "m07loc3u",
+          "_$type": "Sprite",
+          "name": "timeMask",
+          "x": 1.206387192042837e-13,
+          "width": 400,
+          "height": 400,
+          "_gcmds": [
+            {
+              "_$type": "DrawCircleCmd",
+              "x": 0.5,
+              "y": 0.5,
+              "radius": 0.5,
+              "percent": true,
+              "lineWidth": 1,
+              "lineColor": "#000000",
+              "fillColor": "#FFFFFF"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_$id": "tvsvuqmk",
+      "_$type": "Label",
+      "name": "TimeLabel",
+      "width": 400,
+      "height": 400,
+      "text": "20",
+      "fontSize": 200,
+      "color": "#FFFFFF",
+      "align": "center",
+      "valign": "middle",
+      "padding": "0,0,0,0"
+    }
+  ]
+}
