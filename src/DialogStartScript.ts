@@ -31,6 +31,7 @@ export class DialogStartScript extends Laya.Script {
 
         let btnStart = dialog.getChildByName('btnStart') as Laya.Button;
         btnStart.on(Laya.Event.CLICK, () => {
+            Laya.SoundManager.playSound('./resources/audio/ready_go.mp3', 1);
             Laya.stage.event(Laya.Event.MESSAGE, { type: "gameStart" });
             this.owner.destroy(true);       //       他的owner应该是dialog啊？如果其销毁了，那应该还有box啊？实际上它也没有了。
         });

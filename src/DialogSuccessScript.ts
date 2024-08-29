@@ -24,6 +24,8 @@ export class DialogSuccessScript extends Laya.Script {
             Laya.stage.event(Laya.Event.MESSAGE, { type: "success" });
             this.owner.close();       //       他的owner应该是dialog啊？如果其销毁了，那应该还有box啊？实际上它也没有了。
         });
+
+        Laya.SoundManager.playSound('resources/audio/congratulate.mp3', 1);
     }
 
     //组件被禁用时执行，例如从节点从舞台移除后

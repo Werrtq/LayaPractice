@@ -1,6 +1,6 @@
 {
   "name": "LayaProject2d",
-  "startupScene": "res://9b931ecf-fde9-44dd-acf3-15f8dc807965",
+  "startupScene": "res://4fe3f30b-32a2-4b5f-a5fe-6b2b59be15fb",
   "android": {
     "targetArchitectures": {
       "_$type": true,

@@ -84,6 +84,7 @@
       levelLabel.text = "关卡" + GameManager.getInstance().level;
       let btnStart = dialog.getChildByName("btnStart");
       btnStart.on(Laya.Event.CLICK, () => {
+        Laya.SoundManager.playSound("./resources/audio/ready_go.mp3", 1);
         Laya.stage.event(Laya.Event.MESSAGE, { type: "gameStart" });
         this.owner.destroy(true);
       });
@@ -123,6 +124,7 @@
         Laya.stage.event(Laya.Event.MESSAGE, { type: "success" });
         this.owner.close();
       });
+      Laya.SoundManager.playSound("resources/audio/congratulate.mp3", 1);
     }
     //组件被禁用时执行，例如从节点从舞台移除后
     //onDisable(): void {}
@@ -154,8 +156,65 @@
     regClass4("7bad1742-6eed-4d8d-81c0-501dc5bf03d6", "../src/Main.ts")
   ], Main);
 
+  // src/SceneLoading.generated.ts
+  var _SceneLoadingBase = class _SceneLoadingBase extends Laya.Scene {
+  };
+  __name(_SceneLoadingBase, "SceneLoadingBase");
+  var SceneLoadingBase = _SceneLoadingBase;
+
+  // src/SceneLoading.ts
+  var { regClass: regClass5 } = Laya;
+  var SceneLoading = class extends SceneLoadingBase {
+    onEnable() {
+      this.loadingBar.value = 0.75;
+      this.loadToolInfoConfig();
+      this.loadAudioConfig();
+      this.getLocalStorage();
+    }
+    loadToolInfoConfig() {
+      const jsonPath = "./resources/config/config_toolInfo.json";
+      Laya.loader.load(jsonPath, Laya.Loader.JSON).then((json) => {
+        GameManager.getInstance().toolInfo = json.data;
+        console.log("【GameManager.getInstance().toolInfo】", GameManager.getInstance().toolInfo);
+      });
+    }
+    loadAudioConfig() {
+      const jsonPath = "./resources/config/config_audio.json";
+      Laya.loader.load(jsonPath, Laya.Loader.JSON).then((json) => {
+        let audioPath = json.data;
+        console.log("【audioPath】", audioPath);
+        this.loadAudio(audioPath);
+      });
+    }
+    loadAudio(path) {
+      Laya.loader.load(path, null, Laya.Handler.create(this, this.onloading, null, false)).then((result) => {
+        console.log("[result]", result);
+        if (result) {
+          Laya.Scene.open("./resources/Scene/Scene_start.ls", true);
+        }
+      });
+    }
+    onloading(progress) {
+      this.loadingBar.value = progress;
+      console.log("【加载进度】", progress);
+    }
+    getLocalStorage() {
+      let level = localStorage.getItem("level");
+      if (level == null) {
+        localStorage.setItem("level", "1");
+        GameManager.getInstance().level = 1;
+      } else {
+        GameManager.getInstance().level = parseInt(level);
+      }
+    }
+  };
+  __name(SceneLoading, "SceneLoading");
+  SceneLoading = __decorateClass([
+    regClass5("52e9bf23-b282-4819-9517-2372813ab7b5", "../src/SceneLoading.ts")
+  ], SceneLoading);
+
   // src/SceneStartScript.ts
-  var { regClass: regClass5, property: property5 } = Laya;
+  var { regClass: regClass6, property: property5 } = Laya;
   var SceneStartScript = class extends Laya.Script {
     constructor() {
       super(...arguments);
@@ -188,11 +247,11 @@
     property5(String)
   ], SceneStartScript.prototype, "text", 2);
   SceneStartScript = __decorateClass([
-    regClass5("cd2947ea-92aa-4cd4-8309-d811c236a55e", "../src/SceneStartScript.ts")
+    regClass6("cd2947ea-92aa-4cd4-8309-d811c236a55e", "../src/SceneStartScript.ts")
   ], SceneStartScript);
 
   // src/ballScript.ts
-  var { regClass: regClass6, property: property6 } = Laya;
+  var { regClass: regClass7, property: property6 } = Laya;
   var ballScript = class extends Laya.Script {
     constructor() {
       super(...arguments);
@@ -243,11 +302,11 @@
   };
   __name(ballScript, "ballScript");
   ballScript = __decorateClass([
-    regClass6("23d23240-1d41-48ad-9497-fde3cc6a29dd", "../src/ballScript.ts")
+    regClass7("23d23240-1d41-48ad-9497-fde3cc6a29dd", "../src/ballScript.ts")
   ], ballScript);
 
   // src/stopWatchScript.ts
-  var { regClass: regClass7, property: property7 } = Laya;
+  var { regClass: regClass8, property: property7 } = Laya;
   var GREEN = 1;
   var YELLOW = 2;
   var RED = 3;
@@ -329,11 +388,11 @@
     property7(String)
   ], stopWatchScript.prototype, "text", 2);
   stopWatchScript = __decorateClass([
-    regClass7("ad071f3a-f84b-4513-9cc1-7e0a2c55370e", "../src/stopWatchScript.ts")
+    regClass8("ad071f3a-f84b-4513-9cc1-7e0a2c55370e", "../src/stopWatchScript.ts")
   ], stopWatchScript);
 
   // src/playScript.ts
-  var { regClass: regClass8, property: property8 } = Laya;
+  var { regClass: regClass9, property: property8 } = Laya;
   var playScript = class extends Laya.Script {
     constructor() {
       super();
@@ -345,6 +404,7 @@
     onEnable() {
       this.intercom();
       this.initUI();
+      this.soundManager();
       this.initLevel();
       const path = "./resources/preFab/ballPrefab.lh";
       Laya.loader.load(path).then((res) => {
@@ -386,6 +446,7 @@
           case "success":
             Laya.timer.once(1e3, this, () => {
               GameManager.getInstance().level++;
+              localStorage.setItem("level", GameManager.getInstance().level.toString());
               this.stopswitchSp.reset(2e4);
               this.initLevel();
             });
@@ -394,14 +455,7 @@
       });
     }
     initUI() {
-      this.toolInfo = [
-        { type: "pipe01", pipeImage: "atlas/img/pipe01.png", describe: "左右", port1: 1, port2: 3 },
-        { type: "pipe02", pipeImage: "atlas/img/pipe02.png", describe: "上下", port1: 2, port2: 4 },
-        { type: "pipe03", pipeImage: "atlas/img/pipe03.png", describe: "左下", port1: 1, port2: 4 },
-        { type: "pipe04", pipeImage: "atlas/img/pipe04.png", describe: "右下", port1: 3, port2: 4 },
-        { type: "pipe05", pipeImage: "atlas/img/pipe05.png", describe: "上右", port1: 2, port2: 3 },
-        { type: "pipe06", pipeImage: "atlas/img/pipe06.png", describe: "上左", port1: 2, port2: 1 }
-      ];
+      this.toolInfo = GameManager.getInstance().toolInfo;
       let stopswitch = this.owner.getChildByName("stopwatchPrefab");
       this.stopswitchSp = stopswitch.getComponent(stopWatchScript);
       this.pipe = this.owner.getChildByName("pipe");
@@ -617,6 +671,18 @@
         this.assemableInfo[8].pipeImage = this.toolInfo[4].pipeImage;
       }
     }
+    soundManager() {
+      Laya.SoundManager.playMusic("resources/audio/background.mp3", 0);
+      let checkSound = this.owner.getChildByName("checkSound");
+      checkSound.selected = false;
+      checkSound.on(Laya.Event.CHANGE, this, () => {
+        if (checkSound.selected == false) {
+          Laya.SoundManager.playMusic("resources/audio/background.mp3", 0);
+        } else {
+          Laya.SoundManager.stopAll();
+        }
+      });
+    }
     //组件被禁用时执行，例如从节点从舞台移除后
     //onDisable(): void {}
     //第一次执行update之前执行，只会执行一次
@@ -635,7 +701,7 @@
     property8({ type: Laya.Box })
   ], playScript.prototype, "ball", 2);
   playScript = __decorateClass([
-    regClass8("77efc593-71cd-4ec4-814b-3d6ddc4f69bc", "../src/playScript.ts")
+    regClass9("77efc593-71cd-4ec4-814b-3d6ddc4f69bc", "../src/playScript.ts")
   ], playScript);
 })();
 //# sourceMappingURL=bundle.js.map

@@ -291,6 +291,23 @@
       "visible": true,
       "right": 20,
       "top": 20
+    },
+    {
+      "_$id": "oh8pqyry",
+      "_$type": "CheckBox",
+      "name": "checkSound",
+      "x": 20,
+      "y": 20,
+      "width": 128,
+      "height": 128,
+      "_mouseState": 2,
+      "left": 20,
+      "top": 20,
+      "stateNum": 2,
+      "skin": "res://be692e77-1b2f-4678-acb7-a9e198cec2cb",
+      "label": "",
+      "labelSize": 20,
+      "labelVAlign": "top"
     }
   ]
 }

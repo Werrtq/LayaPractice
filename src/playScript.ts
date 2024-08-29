@@ -38,6 +38,7 @@ export class playScript extends Laya.Script {
     onEnable(): void {
         this.intercom();
         this.initUI();
+        this.soundManager();
         this.initLevel();
 
         const path: string = './resources/preFab/ballPrefab.lh';
@@ -84,6 +85,7 @@ export class playScript extends Laya.Script {
                 case "success":
                     Laya.timer.once(1000, this, () => {
                         GameManager.getInstance().level++;
+                        localStorage.setItem("level", GameManager.getInstance().level.toString());
                         this.stopswitchSp.reset(20000);
                         this.initLevel();
                     });
@@ -93,14 +95,15 @@ export class playScript extends Laya.Script {
     }
 
     initUI() {
-        this.toolInfo = [
-            { type: 'pipe01', pipeImage: 'atlas/img/pipe01.png', describe: '左右', port1: 1, port2: 3 },
-            { type: 'pipe02', pipeImage: 'atlas/img/pipe02.png', describe: '上下', port1: 2, port2: 4 },
-            { type: 'pipe03', pipeImage: 'atlas/img/pipe03.png', describe: '左下', port1: 1, port2: 4 },
-            { type: 'pipe04', pipeImage: 'atlas/img/pipe04.png', describe: '右下', port1: 3, port2: 4 },
-            { type: 'pipe05', pipeImage: 'atlas/img/pipe05.png', describe: '上右', port1: 2, port2: 3 },
-            { type: 'pipe06', pipeImage: 'atlas/img/pipe06.png', describe: '上左', port1: 2, port2: 1 }
-        ];
+        this.toolInfo = GameManager.getInstance().toolInfo;
+        // [
+        //     { type: 'pipe01', pipeImage: 'atlas/img/pipe01.png', describe: '左右', port1: 1, port2: 3 },
+        //     { type: 'pipe02', pipeImage: 'atlas/img/pipe02.png', describe: '上下', port1: 2, port2: 4 },
+        //     { type: 'pipe03', pipeImage: 'atlas/img/pipe03.png', describe: '左下', port1: 1, port2: 4 },
+        //     { type: 'pipe04', pipeImage: 'atlas/img/pipe04.png', describe: '右下', port1: 3, port2: 4 },
+        //     { type: 'pipe05', pipeImage: 'atlas/img/pipe05.png', describe: '上右', port1: 2, port2: 3 },
+        //     { type: 'pipe06', pipeImage: 'atlas/img/pipe06.png', describe: '上左', port1: 2, port2: 1 }
+        // ];
         let stopswitch = this.owner.getChildByName("stopwatchPrefab");
         this.stopswitchSp = stopswitch.getComponent(stopWatchScript);
 
@@ -337,6 +340,19 @@ export class playScript extends Laya.Script {
             this.assemableInfo[8].type = this.toolInfo[4].type;
             this.assemableInfo[8].pipeImage = this.toolInfo[4].pipeImage;
         }
+    }
+
+    soundManager() {
+        Laya.SoundManager.playMusic('resources/audio/background.mp3', 0);
+        let checkSound = this.owner.getChildByName('checkSound') as Laya.CheckBox;
+        checkSound.selected = false;
+        checkSound.on(Laya.Event.CHANGE, this, () => {
+            if (checkSound.selected == false) {
+                Laya.SoundManager.playMusic('resources/audio/background.mp3', 0);
+            } else {
+                Laya.SoundManager.stopAll();
+            }
+        })
     }
 
     //组件被禁用时执行，例如从节点从舞台移除后

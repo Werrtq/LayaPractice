@@ -1,0 +1,8 @@
+[
+    { "type": "pipe01", "pipeImage": "atlas/img/pipe01.png", "describe": "左右", "port1": 1, "port2": 3 },
+    { "type": "pipe02", "pipeImage": "atlas/img/pipe02.png", "describe": "上下", "port1": 2, "port2": 4 },
+    { "type": "pipe03", "pipeImage": "atlas/img/pipe03.png", "describe": "左下", "port1": 1, "port2": 4 },
+    { "type": "pipe04", "pipeImage": "atlas/img/pipe04.png", "describe": "右下", "port1": 3, "port2": 4 },
+    { "type": "pipe05", "pipeImage": "atlas/img/pipe05.png", "describe": "上右", "port1": 2, "port2": 3 },
+    { "type": "pipe06", "pipeImage": "atlas/img/pipe06.png", "describe": "上左", "port1": 2, "port2": 1 }
+]
